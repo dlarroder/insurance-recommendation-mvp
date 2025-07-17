@@ -1,18 +1,18 @@
 "use client";
 
-import { useUser } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { UserButton } from "@/components/auth/user-button";
 import { InsuranceForm } from "@/components/InsuranceForm";
 import { RecommendationResult } from "@/components/RecommendationResult";
+import { useUser } from "@/lib/auth-client";
 import { RecommendationResult as RecommendationData } from "@/lib/recommendation-engine";
-import { UserButton } from "@/components/auth/user-button";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function DashboardPage() {
   const { data: user, isLoading } = useUser();
   const router = useRouter();
-  const [recommendation, setRecommendation] = useState<RecommendationData | null>(null);
+  const [recommendation, setRecommendation] =
+    useState<RecommendationData | null>(null);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -87,10 +87,11 @@ export default function DashboardPage() {
               Welcome, {user.name}!
             </h2>
             <p className="text-gray-600">
-              Complete the form below to get your personalized insurance recommendation.
+              Complete the form below to get your personalized insurance
+              recommendation.
             </p>
           </div>
-          
+
           <InsuranceForm onRecommendation={handleRecommendation} />
         </div>
       </section>

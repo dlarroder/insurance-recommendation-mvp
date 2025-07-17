@@ -81,6 +81,7 @@ This application provides personalized life insurance recommendations based on u
    ```
 
    Required environment variables:
+
    - `DATABASE_URL` - PostgreSQL connection string
    - `BETTER_AUTH_SECRET` - Secret key for authentication
    - `NEXT_PUBLIC_APP_URL` - Your application URL
@@ -126,9 +127,6 @@ The application uses the following main tables:
 #### Authentication Tables
 
 - `user` - User account information
-- `session` - User sessions
-- `account` - OAuth provider accounts
-- `verification` - Email verification tokens
 
 #### Application Tables
 
