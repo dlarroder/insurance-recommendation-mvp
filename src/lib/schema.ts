@@ -9,6 +9,48 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
+// Better-auth tables
+export const user = pgTable("user", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("emailVerified").notNull(),
+  image: text("image"),
+  createdAt: timestamp("createdAt").notNull(),
+  updatedAt: timestamp("updatedAt").notNull(),
+});
+
+export const session = pgTable("session", {
+  id: text("id").primaryKey(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: timestamp("createdAt").notNull(),
+  updatedAt: timestamp("updatedAt").notNull(),
+  ipAddress: text("ipAddress"),
+  userAgent: text("userAgent"),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id),
+});
+
+export const account = pgTable("account", {
+  id: text("id").primaryKey(),
+  accountId: text("accountId").notNull(),
+  providerId: text("providerId").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id),
+  accessToken: text("accessToken"),
+  refreshToken: text("refreshToken"),
+  idToken: text("idToken"),
+  accessTokenExpiresAt: timestamp("accessTokenExpiresAt"),
+  refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt"),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: timestamp("createdAt").notNull(),
+  updatedAt: timestamp("updatedAt").notNull(),
+});
+
 export const userSubmissions = pgTable("user_submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
   age: integer("age").notNull(),
@@ -19,6 +61,7 @@ export const userSubmissions = pgTable("user_submissions", {
   recommendationId: uuid("recommendation_id").references(
     () => recommendations.id
   ),
+  userId: text("user_id").references(() => user.id),
 });
 
 export const recommendations = pgTable("recommendations", {
@@ -50,6 +93,12 @@ export const insuranceProducts = pgTable("insurance_products", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export type User = typeof user.$inferSelect;
+export type NewUser = typeof user.$inferInsert;
+export type Session = typeof session.$inferSelect;
+export type NewSession = typeof session.$inferInsert;
+export type Account = typeof account.$inferSelect;
+export type NewAccount = typeof account.$inferInsert;
 export type UserSubmission = typeof userSubmissions.$inferSelect;
 export type NewUserSubmission = typeof userSubmissions.$inferInsert;
 export type Recommendation = typeof recommendations.$inferSelect;
